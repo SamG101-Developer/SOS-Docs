@@ -14,7 +14,7 @@ use SOS_Docs::{print, println};
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    SOS_Docs::hlt_loop();
 }
 
 #[cfg(test)]
@@ -33,6 +33,5 @@ pub extern "C" fn _start() -> ! {
     #[cfg(test)]
     test_main();
     println!("It did not crash!");
-
-    loop {}
+    SOS_Docs::hlt_loop();
 }
