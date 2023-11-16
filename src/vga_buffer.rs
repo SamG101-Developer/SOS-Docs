@@ -145,6 +145,8 @@ pub fn _print(args: Arguments) {
 }
 
 
+// Tests
+
 #[test_case]
 fn test_println_simple() {
     println!("test_println_simple output");

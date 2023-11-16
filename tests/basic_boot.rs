@@ -1,5 +1,6 @@
 #![no_std]
 #![no_main]
+
 #![feature(custom_test_frameworks)]
 #![test_runner(SOS_Docs::test_runner)]
 #![reexport_test_harness_main = "test_main"]
@@ -13,7 +14,6 @@ pub extern "C" fn _start() -> ! {
     test_main();
     loop {}
 }
-
 
 fn test_runner(tests: &[&dyn Fn()]) {
     unimplemented!()
