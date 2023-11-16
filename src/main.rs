@@ -7,6 +7,7 @@
 
 
 use core::panic::PanicInfo;
+use bootloader::{BootInfo, entry_point};
 use SOS_Docs::{print, println};
 
 
@@ -25,13 +26,13 @@ fn panic(info: &PanicInfo) -> ! {
 
 
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+pub extern "C" fn _start(boot_info: &'static BootInfo) -> ! {
     println!("Hello World{}", "!");
     SOS_Docs::init();
 
+    #[cfg(test)] test_main();
 
-    #[cfg(test)]
-    test_main();
     println!("It did not crash!");
     SOS_Docs::hlt_loop();
 }
+
