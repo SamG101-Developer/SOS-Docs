@@ -30,6 +30,7 @@ fn panic(info: &PanicInfo) -> ! {
 
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    use SOS_Docs::allocator;
     use SOS_Docs::memory;
     use x86_64::VirtAddr;
 
@@ -37,9 +38,10 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     SOS_Docs::init();
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
-    let mut _mapper = unsafe { memory::init(phys_mem_offset) };
-    let mut _frame_allocator = unsafe { memory::BootInfoFrameAllocator::init(&boot_info.memory_map) };
+    let mut mapper = unsafe { memory::init(phys_mem_offset) };
+    let mut frame_allocator = unsafe { memory::BootInfoFrameAllocator::init(&boot_info.memory_map) };
 
+    allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialised");
     let x = Box::new(41);
 
     #[cfg(test)] test_main();
