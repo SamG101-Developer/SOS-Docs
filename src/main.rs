@@ -1,11 +1,13 @@
 #![no_std]
 #![no_main]
-
-#![feature(custom_test_frameworks)]
 #![test_runner(SOS_Docs::test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(custom_test_frameworks)]
 
 
+extern crate alloc;
+
+use alloc::boxed::Box;
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
 use SOS_Docs::{print, println};
@@ -37,6 +39,8 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
     let mut _mapper = unsafe { memory::init(phys_mem_offset) };
     let mut _frame_allocator = unsafe { memory::BootInfoFrameAllocator::init(&boot_info.memory_map) };
+
+    let x = Box::new(41);
 
     #[cfg(test)] test_main();
     println!("It did not crash!");
