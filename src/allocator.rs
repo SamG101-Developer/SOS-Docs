@@ -1,14 +1,13 @@
-use alloc::alloc::{GlobalAlloc};
+mod fixed_size_block;
+
 use x86_64::structures::paging::{FrameAllocator, Mapper, Page, PageTableFlags, Size4KiB};
 use x86_64::structures::paging::mapper::MapToError;
 use x86_64::{VirtAddr};
-use crate::allocator::bump::BumpAllocator;
-
-pub mod bump;
+use fixed_size_block::FixedSizeBlockAllocator;
 
 
 #[global_allocator]
-static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+static ALLOCATOR: Locked<FixedSizeBlockAllocator> = Locked::new(FixedSizeBlockAllocator::new());
 
 pub const HEAP_START: usize = 0x4444_4444_0000;
 pub const HEAP_SIZE: usize = 100 * 1024;
@@ -38,6 +37,7 @@ pub fn init_heap(
 }
 
 
+// Locked wrapper around a spin::Mutex
 pub struct Locked<A> {
     inner: spin::Mutex<A>,
 }
