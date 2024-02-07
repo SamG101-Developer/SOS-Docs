@@ -4,7 +4,6 @@
 #![reexport_test_harness_main = "test_main"]
 #![feature(custom_test_frameworks)]
 #![feature(abi_x86_interrupt)]
-#![feature(alloc_error_handler)]
 #![feature(const_mut_refs)]
 #![feature(if_let_guard)]
 
@@ -111,10 +110,4 @@ pub unsafe trait GlobalAllocTrait {
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout);
     unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8;
     unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8;
-}
-
-
-#[alloc_error_handler]
-fn alloc_error_handler(layout: Layout) -> ! {
-    panic!("allocation error: {:?}", layout);
 }
