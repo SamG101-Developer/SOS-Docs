@@ -71,8 +71,9 @@
 
 ### Performance
 - A "hot storage area" is used to store the most frequently accessed chunks, to improve performance.
-- Hot storage areas are stored on the fastest available storage in a system.
+- Hot storage areas are stored on the RAM for quick access.
 - Recent and frequently accessed chunks are stored in the hot storage area, and are quickly accessible.
+- RAM performance isn't affected because the hot storage area is a small portion of the total RAM.
 
 ### Metadata
 - Store metadata for each chunk, including the chunk identifier, reference count, and salt.
