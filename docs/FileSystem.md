@@ -24,7 +24,7 @@
 - This is a `O(1)` operation.
 - Because of chunking with deduplication, the file is not actually copied.
 - The pointer to the new file is added in the target directory.
-- The file is made out of already existing chunks; increment the reference count for each chunk.
+- The file is made of already existing chunks; increment the reference count for each chunk.
 
 ### File deletion
 - This is a `O(1)` operation.
@@ -55,7 +55,11 @@
 ### Deduplication
 - Compare the hash of each chunk with the hashes of existing chunks.
 - If a match is found, the chunk is deduplicated, and the reference count is incremented.
-- If no match is found, the chunk is stored in the chunk store, and a new chunk identifier is created.
+- If no match is found, the chunk is compressed and then stored in the chunk store, and a new chunk identifier is created.
+
+### Compression
+- Compression is done after hashing, to avoid the overhead of compressing chunks that are already in the chunk store.
+- Compression uses the `Zstandard` algorithm, which is fast and efficient for small chunks.
 
 ### Reconstruct a file
 - Reconstruct a file by retrieving the chunks from the chunk store, and concatenating them in the correct order.
