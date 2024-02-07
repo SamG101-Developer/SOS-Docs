@@ -1,4 +1,4 @@
-# Creation & Termination of Processes
+# Process Creation & Termination
 ## Process Ownership Model
 - Each process "owns" its resources, and is responsible for cleaning them up.
 - Owned resourced include memory, file descriptors, child processes, etc.

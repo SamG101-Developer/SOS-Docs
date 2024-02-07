@@ -1,4 +1,3 @@
-
 # Process Scheduling
 ## Core Features
 - Multi-Level Feedback Queue (MLFQ) scheduling algorithm.
@@ -7,6 +6,7 @@
 - Energy-aware scheduling.
 - Security-centric scheduling.
 - Scalability and multi-core utilization.
+- TODO: Context switching
 
 ## Multi-Level Feedback Queue (MLFQ) Scheduling Algorithm
 ### Overview
