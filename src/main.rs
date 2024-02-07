@@ -7,13 +7,10 @@
 
 extern crate alloc;
 
-use alloc::boxed::Box;
-use alloc::rc::Rc;
-use alloc::{vec, vec::Vec};
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
 use SOS_Docs::{print, println};
-use SOS_Docs::task::{Task, simple_executor::SimpleExecutor};
+use SOS_Docs::task::{Task, executor::Executor, keyboard};
 
 entry_point!(kernel_main);
 
@@ -45,12 +42,14 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let mut frame_allocator = unsafe { memory::BootInfoFrameAllocator::init(&boot_info.memory_map) };
 
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialised");
-    let mut executor = SimpleExecutor::new();
-    executor.spawn(Task::new(example_task()));
-    executor.run();
-
 
     #[cfg(test)] test_main();
+
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
+
     println!("It did not crash!");
     SOS_Docs::hlt_loop();
 }

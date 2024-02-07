@@ -20,13 +20,9 @@ pub enum InterruptIndex {
 }
 
 impl InterruptIndex {
-    fn as_u8(self) -> u8 {
-        self as u8
-    }
+    fn as_u8(self) -> u8 { self as u8 }
 
-    fn as_usize(self) -> usize {
-        usize::from(self.as_u8())
-    }
+    fn as_usize(self) -> usize { usize::from(self.as_u8()) }
 }
 
 
@@ -70,34 +66,15 @@ extern "x86-interrupt" fn double_fault_handler(stack_frame: InterruptStackFrame,
 
 extern "x86-interrupt" fn timer_interrupt_handler(stack_frame: InterruptStackFrame) {
     print!(".");
-    unsafe {
-        PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.as_u8());
-    }
+    unsafe { PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.as_u8()); }
 }
 
 extern "x86-interrupt" fn keyboard_interrupt_handler(stack_frame: InterruptStackFrame) {
     use x86_64::instructions::port::Port;
-    use pc_keyboard::{Keyboard, ScancodeSet1, DecodedKey, HandleControl, layouts};
-    use spin::Mutex;
 
-    lazy_static! {
-        static ref KEYBOARD: Mutex<Keyboard<layouts::Us104Key, ScancodeSet1>> = Mutex::new(Keyboard::new(layouts::Us104Key, ScancodeSet1, HandleControl::Ignore));
-    }
-
-    let mut keyboard = KEYBOARD.lock();
     let mut port = Port::new(0x60);
+    let scancode = unsafe { port.read() };
+    crate::task::keyboard::add_scancode(scancode);
 
-    let scan_code: u8 = unsafe { port.read() };
-    if let Ok(Some(key_event)) = keyboard.add_byte(scan_code) {
-        if let Some(key) = keyboard.process_keyevent(key_event) {
-            match key {
-                DecodedKey::Unicode(character) => print!("{}", character),
-                DecodedKey::RawKey(key) => print!("{:?}", key),
-            }
-        }
-    }
-
-    unsafe {
-        PICS.lock().notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
-    }
+    unsafe { PICS.lock().notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8()); }
 }
