@@ -45,3 +45,7 @@
 ### Kernel Address Space Layout Randomization (KASLR)
 - Randomize the base address of the kernel to make it harder for attackers to predict the memory layout of the kernel.
 - This makes it harder for attackers to exploit kernel vulnerabilities.
+
+### Virtual Memory Isolation
+- Each process has its own virtual address space, and cannot access the memory of other processes.
+- Virtual memory isolation is enforced by the MMU, and the page table protection bits.
