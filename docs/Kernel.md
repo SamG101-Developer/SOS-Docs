@@ -3,9 +3,6 @@
 ## Code signing
 - Code signing to verify integrity of kernel modules.
 
-## Process Management
-- Handle creation, scheduling, and termination of processes.
-- Process creation & synchronization, context switching, and efficient scheduling.
 
 ## Memory Management
 - Develop a memory management system to allocate and deallocate memory.
@@ -21,17 +18,10 @@
 - Establish a mechanism to handle interrupts, for asynchronous events (IO requests, hardware errors).
 - Set up interrupt service routines, prioritize interrupts, and manage multiple interrupt requests.
 
-## Inter-Process Communication
-- Implement a mechanism to facilitate communication & data-sharing between processes.
-- Shared memory, message passing, synchronization primitives, etc.
-
 ## System Calls
 - Define a set of system calls that provide an interface for user-space applications to interact with the kernel.
 - Comprehensive set of system calls for lowest-level operations (process/memory/device/file management, etc).
 
-## Scheduler
-- Develop a scheduler to manage the execution of processes.
-- Implement various scheduling algorithms (round-robin, priority-based, etc).
 
 ## Error Handling & Logging
 - Implement a robust error handling mechanism to detect and respond to errors.
@@ -39,6 +29,6 @@
 - Use a hierarchical error handling model, to ensure errors are handled at the appropriate level.
 
 ## File System
-- See [File System](FileSystem.md).
+- See [File System](Kernel/FileSystem/FileSystem.md).
 
 ##
