@@ -28,6 +28,8 @@ pub mod task;
 
 
 pub fn init() {
+    // Init the Global Descriptor Table, Interrupt Descriptor Table, and Programmable Interrupt Controller. Enable
+    // interrupts after all of this is done.
     gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() };
@@ -35,6 +37,7 @@ pub fn init() {
 }
 
 pub fn hlt_loop() -> ! {
+    // Loop forever, waiting for an interrupt.
     loop { x86_64::instructions::hlt(); }
 }
 
@@ -56,6 +59,15 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 }
 
 
+pub unsafe trait GlobalAllocTrait {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8;
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout);
+    unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8;
+    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8;
+}
+
+
+// Testing code
 pub trait Testable {
     fn run(&self);
 }
@@ -102,12 +114,4 @@ fn panic(info: &PanicInfo) -> ! {
 #[test_case]
 fn test_breakpoint_exception() {
     x86_64::instructions::interrupts::int3();
-}
-
-
-pub unsafe trait GlobalAllocTrait {
-    unsafe fn alloc(&self, layout: Layout) -> *mut u8;
-    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout);
-    unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8;
-    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8;
 }
