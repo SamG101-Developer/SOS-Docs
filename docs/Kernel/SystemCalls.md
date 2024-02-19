@@ -15,6 +15,61 @@
 - The system call handler is responsible for validating the system call arguments, and executing the system call function.
 - The system call handler is executed in kernel mode, and has full access to the hardware.
 
+## File Management
+```
+FileCreate(dir: Str) -> Result<File, FileErr>;
+FileDelete(dir: Str, force: Bool) -> Result<File, FileErr>;
+FileOpen(dir: Str, permissions: U64) -> Result<File, FileErr>;
+FileClose(file: File);
+FileWrite(file: File, data: U8[]) -> Result<U64, FileErr>;
+FileRead(file: File, size: U64) -> Result<U8[], FileErr];
+FileSeek(file: File, offset: U64) -> Result<U64, FileErr>;
+FileList(dir: Str) -> Str[];
+FileRename(old: Str, new: Str) -> Result<File, FileErr>
+FileCopy(src: Str, dst: Str);
+FileMove(src: Str, dst: Str);
+FileProtect(file: Str, permissions: U64);
+FileProtection(file: Str) -> U64;
+FileLock(file: Str);
+FileUnlock(file: Str);
+FileLink(file: Str, link: Str);
+FileUnlink(link: Str);
+FileGetMetadata(file: Str) -> Metadata;
+FileSetMetadata(file: Str, metadata: Metadata);
+FileMount(drive: Str, fs: Str);
+FileUnmount(drive: Str);
+FileFormat(drive: Str, fs: Str);
+FileTruncate(file: Str, size: U64);
+```
+
+### `FileCreate`
+#### Description
+- Creates either a file or directory inside the `dir` directory.
+- A file is created if the `dir` has an extension, otherwise a directory is created.
+- The file or directory is created with default permissions, which can be changed using `FileProtect`.
+- A new (empty) file contains 0 chunks to start with.
+
+**Speed:**
+- File addition to tree: `O(1)`
+
+**Errors:**
+- `FileErr::FileAreadyExists`: The file or directory already exists.
+- `FileErr::PermissionDenied`: The user does not have permission to create the file or directory.
+
+
+### `FileDelete`
+#### Description
+- Deletes the file or directory inside the `dir` directory.
+- Deleting a non-empty directory requires the `force` flag to be set to `true`.
+- If a file is deleted, the relevant chunks' reference counts are decremented. 0-chunks are removed.
+
+**Speed:**
+- File deletion from tree: `O(1)`
+- Chunk removal: `O(n) => O(1)` (extremely fast operation)
+
+
+---
+
 ### System Calls
 - There aims to be a small number of system calls, to keep the kernel simple and secure.
 
